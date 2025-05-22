@@ -1,17 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Inicio - Gestor de Películas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .banner-img {
+            max-height: 400px;
+            object-fit: cover;
+            width: 100%;
+        }
+    </style>
 </head>
-<body>
-    <nav>
-        <ul>
-            <li> <a href="{% url 'listar_peliculas' %}">Ver Peliculas</a></li>
-            <li> <a href="{% url 'agregar_pelicula' %}">Agregar Pelicula</a></li>
-        </ul>
+<body class="bg-light">
+
+    <!-- Barra de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">🎥 Gestor de Películas</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'listar_peliculas' %}">📋 Ver Películas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'agregar_pelicula' %}">➕ Agregar Película</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
-    <h1> este es el inicio</h1>
+
+    <!-- Imagen de bienvenida -->
+    <div class="container mt-4">
+        <img src="https://images.unsplash.com/photo-1581905764498-0c7f29b5c7f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+             alt="Bienvenida al sistema" class="banner-img rounded shadow">
+    </div>
+
+    <!-- Contenido -->
+    <div class="container text-center mt-5">
+        <h1 class="text-primary">¡Bienvenido al Gestor de Películas!</h1>
+        <p class="lead text-muted">Administra tus películas favoritas, agrega nuevas, edita o elimina fácilmente. 🎬🍿</p>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

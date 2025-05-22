@@ -4,38 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
-<body>
-    <h2>Modificar datos</h1>
-    <form action="/actualizaPelicula/" method="post" enctype="multipart/form-data">
+<body class="bg-light">
+
+<div class="container mt-5">
+    <h2 class="text-center text-primary mb-4">✏️ Modificar Datos de la Película</h2>
+
+    <form action="/actualizaPelicula/" method="post" enctype="multipart/form-data" class="card p-4 shadow">
         {% csrf_token %}
-        <div>
-            <label for="txtcodigo">Codigo:</label>
-            <input type="text" name="txtcodigo" value="{{ pelicula.pelCodigo }}" required>
+        
+        <div class="mb-3">
+            <label for="txtcodigo" class="form-label">Código</label>
+            <input type="text" name="txtcodigo" class="form-control" value="{{ pelicula.pelCodigo }}" required>
         </div>
-        <div>
-            <label for="txttitulo">Titulo:</label>
-            <input type="text" name="txttitulo" value="{{ pelicula.pelTitulo }}" required>
+
+        <div class="mb-3">
+            <label for="txttitulo" class="form-label">Título</label>
+            <input type="text" name="txttitulo" class="form-control" value="{{ pelicula.pelTitulo }}" required>
         </div>
-        <div>
-            <label for="txtprotagonista">Protagonista:</label>
-            <input type="text" name="txtprotagonista" value="{{ pelicula.pelProtagonista }}" required>
+
+        <div class="mb-3">
+            <label for="txtprotagonista" class="form-label">Protagonista</label>
+            <input type="text" name="txtprotagonista" class="form-control" value="{{ pelicula.pelProtagonista }}" required>
         </div>
-        <div>
-            <label for="txtDuracion">Duracion:</label>
-            <input type="text" name="txtDuracion" value="{{ pelicula.pelDuracion }}" required>
+
+        <div class="mb-3">
+            <label for="txtDuracion" class="form-label">Duración</label>
+            <input type="text" name="txtDuracion" class="form-control" value="{{ pelicula.pelDuracion }}" required>
         </div>
-        <div>
-            <label for="txtresumen">Resumen:</label>
-            <input type="text" name="txtresumen" value="{{ pelicula.pelResumen }}" required>
+
+        <div class="mb-3">
+            <label for="txtresumen" class="form-label">Resumen</label>
+            <input type="text" name="txtresumen" class="form-control" value="{{ pelicula.pelResumen }}" required>
         </div>
-        <div>
-            <label for="txtfoto">Foto:</label>
-            <input type="file" name="txtfoto">
+
+        <div class="mb-3">
+            <label for="txtfoto" class="form-label">Foto</label>
+            <input type="file" name="txtfoto" class="form-control">
         </div>
-        <div>
-            <label for="txtgenero">Genero:</label>
-            <select name="txtgenero" id="txtgenero" required>
+
+        <div class="mb-3">
+            <label for="txtgenero" class="form-label">Género</label>
+            <select name="txtgenero" id="txtgenero" class="form-select" required>
                 {% for genero in generos %}
                     {% if genero.id == pelicula.pelGenero.id %}
                         <option value="{{ genero.id }}" selected>{{ genero.genNombre }}</option>
@@ -46,8 +58,15 @@
             </select>
         </div>
 
-        <button type="submit">Modificar Pelicula</button>
         <input type="hidden" name="idPelicula" value="{{ pelicula.id }}">
+
+        <div class="d-flex justify-content-between mt-4">
+            <button type="submit" class="btn btn-primary">💾 Modificar Película</button>
+            <a href="{% url 'listar_peliculas' %}" class="btn btn-secondary">❌ Cancelar</a>
+        </div>
     </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
