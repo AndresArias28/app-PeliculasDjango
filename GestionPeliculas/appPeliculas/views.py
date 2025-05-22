@@ -1,0 +1,166 @@
+from django.shortcuts import render
+from django.http import HttpResponse, JsonResponse
+from django.db import Error
+from appPeliculas.models import Pelicula, Genero
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+import os
+
+# Create your views here.
+def inicio(request):
+    return render(request, 'inicio.html')
+
+# @csrf_exempt # quitar la respuesta csrf
+def agregarGenero(request):
+    try:
+        nombre = request.POST['txtNombre']
+        genero = Genero(genNombre=nombre)
+        genero.save()
+        mensaje = 'Genero agregado correctamente'
+    except Error as e:
+        mensaje = str(e)
+    retorno = {'mensaje': mensaje }
+    return render(request, 'agregarGenero.html', retorno)
+
+def vistaAgregarGenero(request):
+    return render(request, 'agregarGenero.html')
+
+
+def listarPeliculas(request):
+    peliculas = Pelicula.objects.all()
+    print(peliculas)
+    retorno = {'peliculas': peliculas}
+    return render(request, 'listarPeliculas.html', retorno)
+
+from django.shortcuts import render
+from .models import Pelicula, Genero
+from django.db import DatabaseError  # Asegúrate de importar los errores correctos
+
+def agregarPelicula(request):
+    message = ''
+    pelicula = None
+
+    try:
+        codigo = request.POST['txtcodigo']
+        titulo = request.POST['txttitulo']
+        protagonista = request.POST['txtprotagonista']
+        duracion = int(request.POST['txtDuracion'])
+        resumen = request.POST['txtresumen']
+        foto = request.FILES['txtfoto']
+        id_genero = int(request.POST['txtgenero'])
+
+        genero = Genero.objects.get(pk=id_genero)
+
+        # Crear el objeto Pelicula
+        pelicula = Pelicula(
+            pelCodigo=codigo,
+            pelTitulo=titulo,
+            pelDuracion=duracion,
+            pelProtagonista=protagonista,
+            pelResumen=resumen,
+            pelFoto=foto,
+            pelGenero=genero
+        )
+
+        pelicula.save()
+        message = 'Película agregada correctamente'
+
+    except Genero.DoesNotExist:
+        message = 'Género no encontrado.'
+    except (ValueError, KeyError) as e:
+        message = f'Error en los datos ingresados: {e}'
+    except DatabaseError as e:
+        message = f'Error de base de datos: {e}'
+    except Exception as e:
+        message = f'Ocurrió un error inesperado: {e}'
+
+    peliculas = Pelicula.objects.all()
+
+    contexto = {
+        'message': message,
+        'peliculas': peliculas,
+    }
+
+    if pelicula:
+        contexto['idPelicula'] = pelicula.id
+
+    return render(request, 'listarPeliculas.html', contexto)
+
+
+def vistaAgregarPelicula(request):
+    generos = Genero.objects.all()
+    retorno = {'generos': generos}
+    return render(request, 'agregarPelicula.html', retorno)
+
+def consultarPeliculaPorId(request, id):
+    try:
+        pelicula = Pelicula.objects.get(pk=id)
+        generos = Genero.objects.all()
+        retorno = {
+            'pelicula': pelicula,
+            'generos': generos
+        }
+        return render(request, 'modificarPelicula.html', retorno)
+    except Pelicula.DoesNotExist:
+        retorno = {'mensaje': 'Pelicula no encontrada'}
+        return render(request, 'modificarPelicula.html', retorno)
+    except Error as e:
+        retorno = {'mensaje': str(e)}
+        return render(request, 'modificarPelicula.html', retorno)
+    
+def actualizarPelicula(request):
+    try:
+        id = request.POST['idPelicula']
+        peliculaActualizar = Pelicula.objects.get(pk=id)  # Obtener la película a actualizar
+        peliculaActualizar.pelCodigo = request.POST['txtcodigo']
+        peliculaActualizar.pelTitulo = request.POST['txttitulo']
+        peliculaActualizar.pelDuracion = int(request.POST['txtDuracion'])
+        peliculaActualizar.pelProtagonista = request.POST['txtprotagonista']
+        peliculaActualizar.pelResumen = request.POST['txtresumen']
+        idGenero = int(request.POST['txtgenero'])
+        genero = Genero.objects.get(pk=idGenero)
+        peliculaActualizar.pelGenero = genero
+        foto = request.FILES.get('txtfoto')  # Cambiado a get para evitar KeyError
+        if foto:
+            os.remove(os.path.join(settings.MEDIA_ROOT, str(peliculaActualizar.pelFoto)))
+            peliculaActualizar.pelFoto = foto
+
+        peliculaActualizar.save()
+        mensaje = 'Película actualizada correctamente'
+    except Genero.DoesNotExist:
+        mensaje = 'Género no encontrado.'
+    except Pelicula.DoesNotExist:
+        mensaje = 'Película no encontrada.'
+    except (ValueError, KeyError) as e:
+        mensaje = f'Error en los datos ingresados: {e}'
+    except DatabaseError as e:
+        mensaje = f'Error de base de datos: {e}'
+    except Exception as e:
+        mensaje = f'Ocurrió un error inesperado: {e}'
+
+    peliculas = Pelicula.objects.all()
+
+    contexto = {
+        'mensaje': mensaje,
+        'peliculas': peliculas,
+    }
+    
+    if peliculaActualizar:
+        contexto['idPelicula'] = peliculaActualizar.id
+
+    return render(request, 'listarPeliculas.html', contexto)
+
+def eliminarPelicula(request, id):
+    try:
+        pelicula = Pelicula.objects.get(pk=id)
+        os.remove(os.path.join(settings.MEDIA_ROOT, str(pelicula.pelFoto)))
+        pelicula.delete()
+        mensaje = 'Película eliminada correctamente'
+    except Pelicula.DoesNotExist:
+        mensaje = 'Película no encontrada'
+    except Error as e:
+        mensaje = str(e)
+        
+    peliculas = Pelicula.objects.all()
+    retorno = {'mensaje': mensaje, 'peliculas': peliculas}
+    return render(request, 'listarPeliculas.html', retorno)

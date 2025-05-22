@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <h3>Agregar Pelicula</h3>
+        <form action="/agregarPelicula/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div>
+                <label for="txtcodigo" >Codigo:</label>
+                <input type="text" name="txtcodigo" required>
+            </div>
+            <div>
+                <label for="txttitulo">Titulo:</label>
+                <input type="text" name="txttitulo" required>
+            </div>
+            <div>
+                <label for="txtprotagonista">Protagonista:</label>
+                <input type="text" name="txtprotagonista" required>
+            </div>
+            <div>
+                <label for="txtDuracion">Duracion:</label>
+                <input type="text" name="txtDuracion" required>
+            </div>
+            <div>
+                <label for="txtresumen">Resumen:</label>
+                <input type="text" name="txtresumen" required>
+            </div>
+            <div>
+                <label for="txtfoto">Foto:</label>
+                <input type="file" name="txtfoto" required>
+            </div>
+            <div>
+                <label for="txtgenero">Genero:</label>
+                <select name="txtgenero" id="txtgenero" required>
+                    {% for genero in generos %}
+                        <option value="{{genero.id}}">{{genero.genNombre}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <button type="submit">Agregar Pelicula</button>
+        </form>
+    </div>
+</body>
+</html>

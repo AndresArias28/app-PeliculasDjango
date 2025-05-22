@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Modificar datos</h1>
+    <form action="/actualizaPelicula/" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>
+            <label for="txtcodigo">Codigo:</label>
+            <input type="text" name="txtcodigo" value="{{ pelicula.pelCodigo }}" required>
+        </div>
+        <div>
+            <label for="txttitulo">Titulo:</label>
+            <input type="text" name="txttitulo" value="{{ pelicula.pelTitulo }}" required>
+        </div>
+        <div>
+            <label for="txtprotagonista">Protagonista:</label>
+            <input type="text" name="txtprotagonista" value="{{ pelicula.pelProtagonista }}" required>
+        </div>
+        <div>
+            <label for="txtDuracion">Duracion:</label>
+            <input type="text" name="txtDuracion" value="{{ pelicula.pelDuracion }}" required>
+        </div>
+        <div>
+            <label for="txtresumen">Resumen:</label>
+            <input type="text" name="txtresumen" value="{{ pelicula.pelResumen }}" required>
+        </div>
+        <div>
+            <label for="txtfoto">Foto:</label>
+            <input type="file" name="txtfoto">
+        </div>
+        <div>
+            <label for="txtgenero">Genero:</label>
+            <select name="txtgenero" id="txtgenero" required>
+                {% for genero in generos %}
+                    {% if genero.id == pelicula.pelGenero.id %}
+                        <option value="{{ genero.id }}" selected>{{ genero.genNombre }}</option>
+                    {% else %}
+                        <option value="{{ genero.id }}">{{ genero.genNombre }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit">Modificar Pelicula</button>
+        <input type="hidden" name="idPelicula" value="{{ pelicula.id }}">
+    </form>
+</body>
+</html>
