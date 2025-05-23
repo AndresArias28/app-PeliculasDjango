@@ -5,10 +5,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', views.inicio),
+    path('admin/', admin.site.urls, name='admin'),
+    path('', views.inicio, name='inicio'),
     path('agregarGenero/', views.agregarGenero),
-    path('vistaAgregarGenero/', views.vistaAgregarGenero),
+    path('vistaAgregarGenero/', views.vistaAgregarGenero, name='agregar_genero'),
     path('listarPeliculas/', views.listarPeliculas, name='listar_peliculas'),
     path('agregarPelicula/', views.agregarPelicula),
     path('vistaAgregarPelicula/', views.vistaAgregarPelicula, name='agregar_pelicula'),

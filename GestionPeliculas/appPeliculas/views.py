@@ -5,8 +5,11 @@ from appPeliculas.models import Pelicula, Genero
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 import os
+from django.shortcuts import render
+from .models import Pelicula, Genero
+from django.db import DatabaseError  
 
-# Create your views here.
+
 def inicio(request):
     return render(request, 'inicio.html')
 
@@ -19,12 +22,17 @@ def agregarGenero(request):
         mensaje = 'Genero agregado correctamente'
     except Error as e:
         mensaje = str(e)
-    retorno = {'mensaje': mensaje }
-    return render(request, 'agregarGenero.html', retorno)
+        
+    peliculas = Pelicula.objects.all()
+    contexto = {
+        'mensaje': mensaje,
+        'peliculas': peliculas,
+    }
+
+    return render(request, 'listarPeliculas.html', contexto)
 
 def vistaAgregarGenero(request):
     return render(request, 'agregarGenero.html')
-
 
 def listarPeliculas(request):
     peliculas = Pelicula.objects.all()
@@ -32,14 +40,9 @@ def listarPeliculas(request):
     retorno = {'peliculas': peliculas}
     return render(request, 'listarPeliculas.html', retorno)
 
-from django.shortcuts import render
-from .models import Pelicula, Genero
-from django.db import DatabaseError  # Asegúrate de importar los errores correctos
-
 def agregarPelicula(request):
     message = ''
     pelicula = None
-
     try:
         codigo = request.POST['txtcodigo']
         titulo = request.POST['txttitulo']
@@ -51,7 +54,7 @@ def agregarPelicula(request):
 
         genero = Genero.objects.get(pk=id_genero)
 
-        # Crear el objeto Pelicula
+        # crear el objeto Pelicula
         pelicula = Pelicula(
             pelCodigo=codigo,
             pelTitulo=titulo,
