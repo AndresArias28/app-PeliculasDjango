@@ -44,11 +44,21 @@ def vistaAgregarGenero(request):
 def listarPeliculas(request):
     peliculas = Pelicula.objects.all()
     # Convertir queryset a lista de diccionarios
-    peliculas = list(peliculas.values())
+    #peliculas = list(peliculas.values())
     print(peliculas)
     retorno = {'peliculas': peliculas}
     #return JsonResponse(retorno, safe=False) 
-    return render(request, 'listarPeliculas.html', retorno)
+    peliculas = Pelicula.objects.all()
+
+    contexto = {
+        # 'message': message,
+        'peliculas': peliculas,
+    }
+
+  
+
+    return render(request, 'listarPeliculas.html', contexto)
+    # return render(request, 'listarPeliculas.html', retorno)
 
 # @csrf_exempt
 def agregarPelicula(request):
@@ -98,8 +108,8 @@ def agregarPelicula(request):
     if pelicula:
         contexto['idPelicula'] = pelicula.id
 
-    # return render(request, 'listarPeliculas.html', contexto)
-    return JsonResponse({'message': message, 'pelicula': pelicula.id}, status=200)
+    return render(request, 'listarPeliculas.html', contexto)
+    #return JsonResponse({'message': message, 'pelicula': pelicula.id}, status=200)
 
 
 def vistaAgregarPelicula(request):
@@ -146,15 +156,28 @@ def actualizarPelicula(request):
 
         peliculaActualizar.save()
         
-        peliculas = list(Pelicula.objects.values())
-        contexto = {
-            'mensaje': 'Película actualizada correctamente',
-            'peliculas': peliculas,
-            'idPelicula': peliculaActualizar.id
-        }
-        # return JsonResponse( contexto, status=200)
+        # peliculas = list(Pelicula.objects.values())
         
+        # contexto = {
+        #     'mensaje': 'Película actualizada correctamente',
+        #     'peliculas': peliculas,
+        #     'idPelicula': peliculaActualizar.id,
+            
+        # }
+        # return JsonResponse( contexto, status=200)
+        peliculas = Pelicula.objects.all()
+
+        contexto = {
+ 
+            'peliculas': peliculas,
+        }
+
+        if peliculaActualizar:
+            contexto['idPelicula'] = peliculaActualizar.id
+
         return render(request, 'listarPeliculas.html', contexto)
+        
+        # return render(request, 'listarPeliculas.html', contexto)
         
         mensaje = 'Película actualizada correctamente'
     except Genero.DoesNotExist:
